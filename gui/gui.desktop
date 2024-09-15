@@ -1,8 +1,0 @@
-[Desktop Entry]
-Version=1.0
-Type=Application
-Terminal=true
-Exec=/media/hms/tju/gui/start.sh
-Name=Ka_Robot
-Comment=ROS_Robot
-Icon=/media/hms/tju/gui/icon.png
