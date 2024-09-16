@@ -134,10 +134,14 @@ def launch_new_shell_bash_exit(command):
     script_cmd = f"gnome-terminal -- bash -c 'source /opt/ros/noetic/setup.bash && {command}; exit'"
     subprocess.Popen(script_cmd, shell=True)
 
+def terminate_roslaunch(process_name, message=""):
+    # 使用 pkill 终止特定 ROS launch 进程
+    subprocess.Popen(f"pkill -f {process_name}", shell=True)
+    show_message_auto_close(message)
+
 def close_terminal():
     os.system("pkill gnome-terminal")  # 终止所有gnome-terminal进程
-    terminate_roslaunch("rviz","正在关闭...")
-    terminate_roslaunch("one-touch","正在关闭...")
+    terminate_roslaunch("gui.py")
 
 def get_scans_map():
     # 获取建图地图
@@ -211,7 +215,7 @@ def txt_to_json():
     print("转换完成，已保存到", output_filename)
 
 
-# 这是一个示例函数，用于根据选定的语言更新界面  
+# 根据选定的语言更新界面  
 def on_language_change(event=None):  
     selected_language = language_var.get()  
     # 更新窗口标题  
@@ -224,8 +228,7 @@ def on_language_change(event=None):
     up_trace.config(text=translations[selected_language]['trace']) 
     bn_close.config(text=translations[selected_language]['close'])
 
-
-
+# 读取config 文件配置
 def get_config_value(filename, key):  
     """  
     从指定文件中读取并返回给定键的值。  
@@ -289,7 +292,7 @@ is_started = False
 # 创建 GUI
 root = tk.Tk()
 root.title("KAJIMA Robot UI")
-root.geometry("1000x800")
+root.geometry("600x600")
 
 icon = PhotoImage(file='icon_64x64.png')  
 root.tk.call('wm', 'iconphoto', root._w, icon)
@@ -303,25 +306,27 @@ language_var.set("JP")  # 设置默认选中的语言为JP
 
 language_combobox = ttk.Combobox(root, textvariable=language_var, font=button_font, width=4)  
 language_combobox['values'] = ("CN", "JP")  # 设置下拉菜单的选项  
-language_combobox.grid(row=0, column=2, pady=(80, 20))  # 放置下拉菜单（这里放在标签旁边，可以根据需要调整位置）  
+language_combobox.grid(row=0, column=2, pady=(10, 10))  # 放置下拉菜单（这里放在标签旁边，可以根据需要调整位置）  
+# 配置 Combobox 以右对齐文本（这影响选中的值显示）  
+# language_combobox.configure(anchor='e')  # 'e' 表示东（右）
 
 language_var.trace("w", lambda name, index, mode: on_language_change(language_var.get()))
 
 # UI 标签
 label_title = tk.Label(root, text="KAJIMA Robot UI", font=label_font)
-label_title.grid(row=0, columnspan=1, pady=(80, 20))
+label_title.grid(row=1, columnspan=1, pady=(40, 0))
 
 # 使用 grid 平行放置按钮
 down_scan_map = tk.Button(root, text="スキャンマップのダウンロード", command=get_scans_map, font=button_font, width=35)
-down_scan_map.grid(row=1, column=0, pady=15, padx=5)
+down_scan_map.grid(row=2, column=0, pady=15, padx=5, columnspan=2)
 down_nav_map = tk.Button(root, text="ナビゲーションマップのダウンロード", command=get_nav_map, font=button_font, width=35)
-down_nav_map.grid(row=2, column=0, pady=15, padx=5)
+down_nav_map.grid(row=3, column=0, pady=15, padx=5, columnspan=2)
 
 up_trace = tk.Button(root, text="ナビゲーションパスのアップロード", command=upload_trace, font=button_font, width=35)
-up_trace.grid(row=3, column=0, pady=15, padx=5)
+up_trace.grid(row=4, column=0, pady=15, padx=5, columnspan=2)
 
 bn_close = tk.Button(root, text="閉じる", command=close_terminal, font=button_font, width=35)
-bn_close.grid(row=4, column=0, pady=15, padx=5, columnspan=2)
+bn_close.grid(row=5, column=0, pady=15, padx=5, columnspan=2)
 
 root.mainloop()
 
