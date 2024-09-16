@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import scrolledtext, filedialog, simpledialog, PhotoImage
+from tkinter import scrolledtext, filedialog, simpledialog, PhotoImage, ttk
 import subprocess
 import os
 import time
@@ -211,6 +211,21 @@ def txt_to_json():
     print("转换完成，已保存到", output_filename)
 
 
+# 这是一个示例函数，用于根据选定的语言更新界面  
+def on_language_change(event=None):  
+    selected_language = language_var.get()  
+    # 更新窗口标题  
+    root.title(translations[selected_language]['title'])  
+    # 更新其他界面元素...  
+    # 例如，更新一个标签的文本  
+    label_title.config(text=translations[selected_language]['title'])
+    down_scan_map.config(text=translations[selected_language]['scan_map']) 
+    down_nav_map.config(text=translations[selected_language]['nav_map']) 
+    up_trace.config(text=translations[selected_language]['trace']) 
+    bn_close.config(text=translations[selected_language]['close'])
+
+
+
 def get_config_value(filename, key):  
     """  
     从指定文件中读取并返回给定键的值。  
@@ -253,60 +268,60 @@ robot_ip = get_config_value("config","robot_ip")
 # 这里：  cd /home/hms/ws_robot 路径。
 
 
+# 假设您有一个包含语言翻译的字典  
+translations = {  
+    'CN': {'title': 'KAJIMA Robot UI', 
+           'scan_map': '下载采集地图',
+           'nav_map': '下载导航地图',
+           'trace': '上传导航路径',
+           'close': '关闭'},  
+    'JP': {'title': 'KAJIMA Robot UI', 
+           'scan_map': 'スキャンマップのダウンロード',
+           'nav_map': 'ナビゲーションマップのダウンロード',
+           'trace': 'ナビゲーションパスのアップロード',
+           'close': '閉じる'},  
+    # 添加其他语言...  
+}
 
 # 初始化状态
 is_started = False
 
 # 创建 GUI
 root = tk.Tk()
-root.title("ROS Launch Manager")
+root.title("KAJIMA Robot UI")
 root.geometry("1000x800")
 
 icon = PhotoImage(file='icon_64x64.png')  
 root.tk.call('wm', 'iconphoto', root._w, icon)
 
-
 label_font = ('Helvetica', 20, 'bold')
 button_font = ('Helvetica', 16)
 
-tk.Label(root, text="GUI：", font=label_font).grid(row=0, columnspan=2, pady=(80, 20))
+# 创建并放置下拉菜单（Combobox） , 语言选择栏
+language_var = tk.StringVar()  # 创建一个StringVar变量来存储选中的语言  
+language_var.set("JP")  # 设置默认选中的语言为JP  
+
+language_combobox = ttk.Combobox(root, textvariable=language_var, font=button_font, width=4)  
+language_combobox['values'] = ("CN", "JP")  # 设置下拉菜单的选项  
+language_combobox.grid(row=0, column=2, pady=(80, 20))  # 放置下拉菜单（这里放在标签旁边，可以根据需要调整位置）  
+
+language_var.trace("w", lambda name, index, mode: on_language_change(language_var.get()))
+
+# UI 标签
+label_title = tk.Label(root, text="KAJIMA Robot UI", font=label_font)
+label_title.grid(row=0, columnspan=1, pady=(80, 20))
 
 # 使用 grid 平行放置按钮
-tk.Button(root, text="スキャンマップのダウンロード", command=get_scans_map, font=button_font, width=35).grid(row=1, column=0, pady=15, padx=5)
-tk.Button(root, text="ナビゲーションマップのダウンロード", command=get_nav_map, font=button_font, width=35).grid(row=2, column=0, pady=15, padx=5)
+down_scan_map = tk.Button(root, text="スキャンマップのダウンロード", command=get_scans_map, font=button_font, width=35)
+down_scan_map.grid(row=1, column=0, pady=15, padx=5)
+down_nav_map = tk.Button(root, text="ナビゲーションマップのダウンロード", command=get_nav_map, font=button_font, width=35)
+down_nav_map.grid(row=2, column=0, pady=15, padx=5)
 
-tk.Button(root, text="ナビゲーションパスのアップロード", command=upload_trace, font=button_font, width=35).grid(row=3, column=0, pady=15, padx=5)
-#tk.Button(root, text="抓取最新地图", command=get_new_map, font=button_font, width=20).grid(row=2, column=1, pady=15, padx=5)
+up_trace = tk.Button(root, text="ナビゲーションパスのアップロード", command=upload_trace, font=button_font, width=35)
+up_trace.grid(row=3, column=0, pady=15, padx=5)
 
-#tk.Button(root, text="自律走行開始", command=launch_location, font=button_font, width=20).grid(row=3, column=0, pady=15, padx=5)
-#tk.Button(root, text="自律走行終了", command=terminate_location, font=button_font, width=20).grid(row=3, column=1, pady=15, padx=5)
-
-#tk.Button(root, text="启动路径规划", command=launch_nav, font=button_font, width=20).grid(row=3, column=0, pady=15, padx=5)
-#tk.Button(root, text="停止路径规划", command=terminate_nav, font=button_font, width=20).grid(row=3, column=1, pady=15, padx=5)
-
-#tk.Button(root, text="启动导航", command=launch_nav_start, font=button_font, width=20).grid(row=4, column=0, pady=15, padx=5)
-#start_stop_button = tk.Button(root, text="启动", command=launch_start_stop, font=button_font, width=20)
-#start_stop_button.grid(row=4, column=1, pady=15, padx=5)
-
-#tk.Button(root, text="备份地图", command=select_and_backup_map, font=button_font, width=20).grid(row=5, column=0, pady=15, padx=5)  
-#tk.Button(root, text="恢复地图", command=select_and_restore_map, font=button_font, width=20).grid(row=5, column=1, pady=15, padx=5)  
-
-#tk.Button(root, text="can driver", command=launch_bunker, font=button_font, width=20).grid(row=7, column=0, pady=15, padx=5, columnspan=2)
-tk.Button(root, text="閉じる", command=close_terminal, font=button_font, width=35).grid(row=8, column=0, pady=15, padx=5, columnspan=2)
-
-# 新增：用于显示PCD文件名的文本区域  
-#pcd_text_area = scrolledtext.ScrolledText(root, width=30, height=4, state=tk.DISABLED)  
-#pcd_text_area.grid(row=5, column=1, columnspan=2, pady=15, padx=5)
-
-# 新增：显示PCD文件名的按钮  
-#tk.Button(root, text="显示PCD文件", command=lambda: display_pcd_files("/home/hms"), font=button_font, width=20).grid(row=5, column=0, pady=15, padx=5)  
-  
-# 创建一个Listbox控件，用于展示PCD文件列表  
-#pcd_listbox = tk.Listbox(root)  
-#pcd_listbox.grid(row=5, column=1, columnspan=2, pady=15, padx=5, sticky='ew')    
-  
-# 为Listbox控件绑定双击事件    
-#pcd_listbox.bind('<Double-1>', on_file_select)  
-
+bn_close = tk.Button(root, text="閉じる", command=close_terminal, font=button_font, width=35)
+bn_close.grid(row=4, column=0, pady=15, padx=5, columnspan=2)
 
 root.mainloop()
+
