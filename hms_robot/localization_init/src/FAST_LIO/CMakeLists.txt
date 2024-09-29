@@ -49,7 +49,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  pcl_rosrun
+  pcl_ros
   tf
   livox_ros_driver2
   message_generation
