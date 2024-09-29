@@ -16,7 +16,7 @@ int main()
     // 创建体素滤波对象
     pcl::VoxelGrid<pcl::PointXYZI> voxelgrid;
     voxelgrid.setInputCloud(cloud);
-    voxelgrid.setLeafSize(0.5f, 0.5f, 0.5f);  // 设置体素网格的尺寸
+    voxelgrid.setLeafSize(0.3f, 0.3f, 0.3f);  // 设置体素网格的尺寸
 
     // 执行体素滤波
     pcl::PointCloud<pcl::PointXYZI>::Ptr filteredCloud(new pcl::PointCloud<pcl::PointXYZI>);

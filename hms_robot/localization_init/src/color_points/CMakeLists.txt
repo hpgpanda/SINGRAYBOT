@@ -4,6 +4,7 @@ project(color_points)
 find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   pcl_conversions
+  my_custom_msgs
   pcl_ros
   roscpp
   rospy
@@ -35,10 +36,13 @@ include_directories(
 )
 
 
+add_executable(colorpoints src/colorpoints.cpp)
 add_executable(filter src/filter.cpp)
 
 
-
+target_link_libraries(colorpoints
+   ${catkin_LIBRARIES}
+ )
  target_link_libraries(filter
  ${catkin_LIBRARIES}
 )
