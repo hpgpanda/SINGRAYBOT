@@ -66,3 +66,4 @@ pose_transform:
     qw: 1
     iter_times: 200
     update2_time: 100
+    obstacle_distance: 1

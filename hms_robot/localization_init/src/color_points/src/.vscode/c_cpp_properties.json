@@ -1,0 +1,30 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/gk/mon_livox_ws/devel/include/**",
+        "/home/gk/ws_livox/devel/include/**",
+        "/home/gk/livox_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/gk/livox_ws/src/A-LOAM-devel/include/**",
+        "/home/gk/mon_livox_ws/src/color_points/include/**",
+        "/home/gk/mon_livox_ws/src/FAST_LIO-main/include/**",
+        "/home/gk/livox_ws/src/FAST_LIO_MULTI-main/include/**",
+        "/home/gk/mon_livox_ws/src/livox_laser_simulation_gz11-master/include/**",
+        "/home/gk/mon_livox_ws/src/pca_pc2/include/**",
+        "/home/gk/livox_ws/src/undistort/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
